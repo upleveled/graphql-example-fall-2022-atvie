@@ -2,13 +2,32 @@ import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { gql } from 'graphql-tag';
-import { getAnimal, getAnimals } from '../../database/animals';
+import {
+  AnimalInput,
+  createAnimal,
+  deleteAnimal,
+  getAnimal,
+  getAnimals,
+  updateAnimal,
+} from '../../database/animals';
 
 const typeDefs = gql`
   type Query {
     # Query for animals
     animals: [Animal]
     animal(id: ID!): Animal
+  }
+
+  # Mutation type definition
+  type Mutation {
+    # Create a new animal
+    createAnimal(name: String!, type: String!, accessory: String): Animal
+
+    # Update an existing animal
+    updateAnimal(id: ID!, name: String, type: String, accessory: String): Animal
+
+    # Delete an existing animal
+    deleteAnimal(id: ID!): Animal
   }
 
   # Animal type definition
@@ -73,6 +92,26 @@ const resolvers = {
     animal(parent: string, { id }: { id: string }) {
       // return animals.find((animal) => animal.id === parseInt(id));
       return getAnimal(parseInt(id));
+    },
+  },
+
+  // Create a new animal
+  Mutation: {
+    createAnimal(parent: string, { name, type, accessory }: AnimalInput) {
+      return createAnimal(name, type, accessory);
+    },
+
+    // Update an existing animal
+    updateAnimal(
+      parent: string,
+      { id, name, type, accessory }: AnimalInput & { id: string },
+    ) {
+      return updateAnimal(parseInt(id), name, type, accessory);
+    },
+
+    // Delete an existing animal
+    deleteAnimal(parent: string, { id }: { id: string }) {
+      return deleteAnimal(parseInt(id));
     },
   },
 };
