@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "dotenv ley"
   },
   "dependencies": {
     "@apollo/server": "^4.1.1",
@@ -15,11 +16,15 @@
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "dotenv-cli": "^6.0.0",
+    "dotenv-safe": "^8.2.0",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.4",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
+    "ley": "^0.8.1",
     "next": "13.0.4",
+    "postgres": "^3.3.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sharp": "^0.31.2",
@@ -29,6 +34,7 @@
     "@babel/eslint-parser": "7.19.1",
     "@next/eslint-plugin-next": "13.0.3",
     "@ts-safeql/eslint-plugin": "0.0.21",
+    "@types/dotenv-safe": "^8.1.2",
     "@types/eslint": "8.4.10",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
