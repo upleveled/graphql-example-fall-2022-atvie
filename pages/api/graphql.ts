@@ -2,6 +2,7 @@ import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { gql } from 'graphql-tag';
+import { getAnimal, getAnimals } from '../../database/animals';
 
 const typeDefs = gql`
   type Query {
@@ -19,65 +20,59 @@ const typeDefs = gql`
   }
 `;
 
-// TypeScript type definition
-export type Animal = {
-  id: number;
-  name: string;
-  type: string;
-  accessory: string;
-};
-
-// Fake data
-const animals = [
-  {
-    id: 1,
-    name: 'Ralph',
-    type: 'Tiger',
-    accessory: 'Gold chain',
-  },
-  {
-    id: 2,
-    name: 'Evelina',
-    type: 'Hedgehog',
-    accessory: 'Comb',
-  },
-  {
-    id: 3,
-    name: 'Otto',
-    type: 'Otter',
-    accessory: 'Stone',
-  },
-  {
-    id: 4,
-    name: 'Mayo',
-    type: 'Dog',
-    accessory: 'Sweater',
-  },
-  {
-    id: 5,
-    name: 'Kaaaarl',
-    type: 'Llama',
-    accessory: 'Toque',
-  },
-  {
-    id: 6,
-    name: 'Lulu',
-    type: 'Dog',
-    accessory: 'Toque',
-  },
-];
+// Now we are getting this data from the database
+// const animals = [
+//   {
+//     id: 1,
+//     name: 'Ralph',
+//     type: 'Tiger',
+//     accessory: 'Gold chain',
+//   },
+//   {
+//     id: 2,
+//     name: 'Evelina',
+//     type: 'Hedgehog',
+//     accessory: 'Comb',
+//   },
+//   {
+//     id: 3,
+//     name: 'Otto',
+//     type: 'Otter',
+//     accessory: 'Stone',
+//   },
+//   {
+//     id: 4,
+//     name: 'Mayo',
+//     type: 'Dog',
+//     accessory: 'Sweater',
+//   },
+//   {
+//     id: 5,
+//     name: 'Kaaaarl',
+//     type: 'Llama',
+//     accessory: 'Toque',
+//   },
+//   {
+//     id: 6,
+//     name: 'Lulu',
+//     type: 'Dog',
+//     accessory: 'Toque',
+//   },
+// ];
 
 // Create Resolvers
 const resolvers = {
   Query: {
     //  Query for animals
     animals() {
-      return animals;
+      // return animals;
+      return getAnimals();
     },
 
     // Query for a single animal
-    animal(parent: any, { id }: any) {
-      return animals.find((animal) => animal.id === parseInt(id));
+    animal(parent: string, { id }: { id: string }) {
+      // return animals.find((animal) => animal.id === parseInt(id));
+      return getAnimal(parseInt(id));
     },
   },
 };
