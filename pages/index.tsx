@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Animal } from '../database/animals';
 import queryGraphql from '../shared/query-graphql';
 import styles from '../styles/Home.module.css';
-import { Animal } from './api/graphql';
 
 type Props = {
   animals: Animal[];

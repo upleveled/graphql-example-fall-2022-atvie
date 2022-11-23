@@ -1,9 +1,9 @@
 import { GetServerSidePropsContext } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Animal as AnimalProps } from '../database/animals';
 import queryGraphql from '../shared/query-graphql';
 import styles from '../styles/Home.module.css';
-import { Animal as AnimalProps } from './api/graphql';
 
 type Props = {
   animal: AnimalProps;
