@@ -98,6 +98,18 @@ const resolvers = {
   // Create a new animal
   Mutation: {
     createAnimal(parent: string, { name, type, accessory }: AnimalInput) {
+      // error handling in apollo server
+      if (
+        typeof name !== 'string' ||
+        typeof type !== 'string' ||
+        typeof accessory !== 'string' ||
+        !name ||
+        !type ||
+        !accessory
+      ) {
+        throw new Error('All fields are required');
+      }
+
       return createAnimal(name, type, accessory);
     },
 

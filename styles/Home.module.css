@@ -72,6 +72,39 @@
   height: 100px;
 }
 
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.form .formItems {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #a3a1a1;
+  border-radius: 10px;
+}
+
+.form .formItems input {
+  display: block;
+  height: 50px;
+  margin: 6px 0;
+  border: 2px solid #a3a1a1;
+  border-radius: 10px;
+  padding: 0 10px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: red;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
