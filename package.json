@@ -10,6 +10,7 @@
     "migrate": "dotenv ley"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.1",
     "@apollo/server": "^4.1.1",
     "@as-integrations/next": "^1.2.0",
     "@graphql-tools/schema": "^9.0.10",
