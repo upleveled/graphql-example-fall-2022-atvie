@@ -21,6 +21,9 @@ export default function Home(props: Props) {
       <main>
         <h1 className={styles.title}>Home</h1>
 
+        <Link href="/create-animal">Create Animal</Link>
+        <Link href="/animal-admin">Admin Animal</Link>
+
         <div className={styles.grid}>
           {props.animals.map((animal) => {
             return (
@@ -53,8 +56,6 @@ query {
     animals {
     id
     name
-    accessory
-    type
   }
 }
 `);
