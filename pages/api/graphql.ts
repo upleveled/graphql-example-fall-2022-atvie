@@ -11,6 +11,21 @@ import {
   updateAnimal,
 } from '../../database/animals';
 
+// TypeScript type for the context Objects
+type DeleteAnimalContext = {
+  req: {
+    cookies: {
+      sessionToken: string;
+    };
+  };
+};
+
+type CreateAnimalContext = {
+  res: {
+    setHeader: (name: string, value: string) => void;
+  };
+};
+
 const typeDefs = gql`
   type Query {
     # Query for animals
@@ -79,6 +94,11 @@ const typeDefs = gql`
 //   },
 // ];
 
+// Create fake serializedCookie for authentication
+function createSerializedCookie(name: string) {
+  return `sessionToken=${name}; HttpOnly; SameSite=lax; Path=/; Max-Age=3600`;
+}
+
 // Create Resolvers
 const resolvers = {
   Query: {
@@ -95,10 +115,14 @@ const resolvers = {
     },
   },
 
-  // Create a new animal
+  // Mutation resolvers
   Mutation: {
-    createAnimal(parent: string, { name, type, accessory }: AnimalInput) {
-      // error handling in apollo server
+    // Create a new animal
+    createAnimal(
+      parent: string,
+      { name, type, accessory }: AnimalInput,
+      context: CreateAnimalContext,
+    ) {
       if (
         typeof name !== 'string' ||
         typeof type !== 'string' ||
@@ -109,6 +133,11 @@ const resolvers = {
       ) {
         throw new Error('All fields are required');
       }
+
+      // Call the serialized cookie function
+      const serializedCookie = createSerializedCookie(name);
+
+      context.res.setHeader('Set-Cookie', serializedCookie);
 
       return createAnimal(name, type, accessory);
     },
@@ -122,7 +151,14 @@ const resolvers = {
     },
 
     // Delete an existing animal
-    deleteAnimal(parent: string, { id }: { id: string }) {
+    deleteAnimal(
+      parent: string,
+      { id }: { id: string },
+      context: DeleteAnimalContext,
+    ) {
+      if (context.req.cookies.sessionToken !== 'Admin') {
+        throw new Error('You are not authorized to delete this animal');
+      }
       return deleteAnimal(parseInt(id));
     },
   },
@@ -140,4 +176,8 @@ const server = new ApolloServer({
 });
 
 // Start the server and create a Next.js handler
-export default startServerAndCreateNextHandler(server);
+export default startServerAndCreateNextHandler(server, {
+  context: async (req, res) => {
+    return await { req, res };
+  },
+});
