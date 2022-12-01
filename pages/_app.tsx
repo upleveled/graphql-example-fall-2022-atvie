@@ -14,6 +14,7 @@ const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache,
   uri: `${baseUrl}/graphql`,
+  credentials: 'same-origin',
 });
 
 export default function App({ Component, pageProps }: AppProps) {
