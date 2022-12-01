@@ -76,7 +76,7 @@ export default function CreateAnimalPage() {
               onChange={(event) => setAccessory(event.currentTarget.value)}
             />
           </label>
-          <div className={styles.error}>{error}</div>
+          <p className={styles.error}>{error}</p>
           <button>Create Animal</button>
         </div>
       </form>
