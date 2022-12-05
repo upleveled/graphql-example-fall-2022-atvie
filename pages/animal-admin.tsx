@@ -1,5 +1,4 @@
-import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag';
+import { gql, useMutation } from '@apollo/client';
 import Head from 'next/head';
 import { Fragment, useState } from 'react';
 import { Animal } from '../database/animals';
@@ -186,11 +185,10 @@ export default function AnimalsAdmin(props: Props) {
                 </button>
               )}
               <br />
-
-              <p className={styles.error}>{onError}</p>
             </Fragment>
           );
         })}
+        <p className={styles.error}>{onError}</p>
       </div>
     </>
   );
