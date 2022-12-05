@@ -5,17 +5,21 @@ import { makeExecutableSchema } from '@graphql-tools/schema';
 import {
   AnimalInput,
   createAnimal,
-  deleteAnimal,
-  getAnimal,
+  deleteAnimalById,
+  getAnimalById,
   getAnimals,
-  updateAnimal,
+  updateAnimalById,
 } from '../../database/animals';
 
-// TypeScript type for the context Objects
+// TypeScript types
+
 type DeleteAnimalContext = {
+  adminAnimal: {
+    name: string;
+  };
   req: {
     cookies: {
-      sessionToken: string;
+      fakeSessionToken: string;
     };
   };
 };
@@ -26,10 +30,19 @@ type CreateAnimalContext = {
   };
 };
 
+type Argument = {
+  id: string;
+};
+
+type UpdateAnimalInput = AnimalInput & Argument;
+
+// GraphQL schema
 const typeDefs = gql`
   type Query {
-    # Query for animals
+    # Query all animals
     animals: [Animal]
+
+    # Query a single animal by ID
     animal(id: ID!): Animal
   }
 
@@ -95,23 +108,22 @@ const typeDefs = gql`
 // ];
 
 // Create fake serializedCookie for authentication
-function createSerializedCookie(name: string) {
-  return `sessionToken=${name}; HttpOnly; SameSite=lax; Path=/; Max-Age=3600`;
+function createMockSerializedCookie(name: string) {
+  return `fakeSessionToken=${name}; HttpOnly; SameSite=lax; Path=/; Max-Age=3600`;
 }
 
 // Create Resolvers
 const resolvers = {
   Query: {
-    //  Query for animals
+    //  resolver for the animals query
     animals() {
-      // return animals;
+      console.log('Querying for all animals');
       return getAnimals();
     },
 
-    // Query for a single animal
-    animal(parent: string, { id }: { id: string }) {
-      // return animals.find((animal) => animal.id === parseInt(id));
-      return getAnimal(parseInt(id));
+    // resolver for the animal query
+    animal(parent: string, args: Argument) {
+      return getAnimalById(parseInt(args.id));
     },
   },
 
@@ -134,10 +146,9 @@ const resolvers = {
         throw new Error('All fields are required');
       }
 
-      // Call the serialized cookie function
-      const serializedCookie = createSerializedCookie(name);
-
-      context.res.setHeader('Set-Cookie', serializedCookie);
+      // Create cookies each time a new animal is created
+      const fakeSerializedCookie = createMockSerializedCookie(name);
+      context.res.setHeader('Set-Cookie', fakeSerializedCookie);
 
       return createAnimal(name, type, accessory);
     },
@@ -145,21 +156,17 @@ const resolvers = {
     // Update an existing animal
     updateAnimal(
       parent: string,
-      { id, name, type, accessory }: AnimalInput & { id: string },
+      { id, name, type, accessory }: UpdateAnimalInput,
     ) {
-      return updateAnimal(parseInt(id), name, type, accessory);
+      return updateAnimalById(parseInt(id), name, type, accessory);
     },
 
     // Delete an existing animal
-    deleteAnimal(
-      parent: string,
-      { id }: { id: string },
-      context: DeleteAnimalContext,
-    ) {
-      if (context.req.cookies.sessionToken !== 'Admin') {
+    deleteAnimal(parent: string, args: Argument, context: DeleteAnimalContext) {
+      if (context.adminAnimal.name !== context.req.cookies.fakeSessionToken) {
         throw new Error('You are not authorized to delete this animal');
       }
-      return deleteAnimal(parseInt(id));
+      return deleteAnimalById(parseInt(args.id));
     },
   },
 };
@@ -178,6 +185,8 @@ const server = new ApolloServer({
 // Start the server and create a Next.js handler
 export default startServerAndCreateNextHandler(server, {
   context: async (req, res) => {
-    return await { req, res };
+    const adminAnimal = await getAnimalById(1);
+
+    return { req, res, adminAnimal };
   },
 });
