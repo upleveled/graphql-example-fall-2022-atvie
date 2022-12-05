@@ -22,7 +22,6 @@
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.4",
     "graphql": "^16.6.0",
-    "graphql-tag": "^2.12.6",
     "ley": "^0.8.1",
     "next": "13.0.4",
     "postgres": "^3.3.2",

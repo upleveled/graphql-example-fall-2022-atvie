@@ -1,7 +1,7 @@
+import { gql } from '@apollo/client';
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-import { gql } from 'graphql-tag';
 import {
   AnimalInput,
   createAnimal,
