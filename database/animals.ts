@@ -17,7 +17,7 @@ export async function getAnimals() {
 }
 
 // Get a single animal
-export async function getAnimal(id: number) {
+export async function getAnimalById(id: number) {
   return (
     await sql<Animal[]>`
       SELECT
@@ -48,7 +48,7 @@ export async function createAnimal(
 }
 
 // Update an animal
-export async function updateAnimal(
+export async function updateAnimalById(
   id: number,
   name: string,
   type: string,
@@ -70,7 +70,7 @@ export async function updateAnimal(
 }
 
 // Delete an animal
-export async function deleteAnimal(id: number) {
+export async function deleteAnimalById(id: number) {
   return (
     await sql<Animal[]>`
       DELETE FROM
