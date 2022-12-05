@@ -62,14 +62,16 @@ export default function AnimalsAdmin(props: Props) {
 
   async function handleAnimalDelete(id: number) {
     try {
-      const deletedAnimal = await animalToDelete({
+      const { data } = await animalToDelete({
         variables: {
           id: id,
         },
       });
 
-      if (deletedAnimal.data) {
-        setAnimals(animals.filter((animal) => animal.id !== id));
+      if (data) {
+        setAnimals(
+          animals.filter((animal) => animal.id !== data.deleteAnimal.id),
+        );
       }
     } catch (err) {
       let message;
@@ -85,7 +87,7 @@ export default function AnimalsAdmin(props: Props) {
 
   async function handleAnimalUpdate(id: number) {
     try {
-      const updatedAnimal = await animalToUpdate({
+      const { data } = await animalToUpdate({
         variables: {
           id: id,
           name: name,
@@ -94,16 +96,14 @@ export default function AnimalsAdmin(props: Props) {
         },
       });
 
-      if (updatedAnimal.data) {
+      if (data) {
         setAnimals(
           animals.map((animal) => {
-            if (animal.id === id) {
-              return {
-                ...animal,
-                testAnimal: updatedAnimal,
-              };
+            if (animal.id === data.updateAnimal.id) {
+              return data.updateAnimal;
+            } else {
+              return animal;
             }
-            return animal;
           }),
         );
       }
