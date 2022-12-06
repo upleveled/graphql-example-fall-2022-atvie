@@ -117,7 +117,6 @@ const resolvers = {
   Query: {
     //  resolver for the animals query
     animals() {
-      console.log('Querying for all animals');
       return getAnimals();
     },
 
