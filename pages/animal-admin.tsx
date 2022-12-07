@@ -1,6 +1,7 @@
 import { gql, useMutation } from '@apollo/client';
 import Head from 'next/head';
 import { Fragment, useState } from 'react';
+import Layout from '../components/Layout';
 import { Animal } from '../database/animals';
 import queryGraphql from '../shared/query-graphql';
 import styles from '../styles/Home.module.css';
@@ -126,70 +127,71 @@ export default function AnimalsAdmin(props: Props) {
         <meta name="description" content="Protected page" />
       </Head>
 
-      <div className={styles.container}>
-        <h1>Animals List</h1>
+      <Layout>
+        <h1 className={styles.title}>Dashboard</h1>
+        <div className={styles.container}>
+          {animals.map((animal) => {
+            const isEditing = onEditId === animal.id;
 
-        {animals.map((animal) => {
-          const isEditing = onEditId === animal.id;
-
-          return (
-            <Fragment key={animal.id}>
-              <input
-                value={isEditing ? name : animal.name}
-                disabled={!isEditing}
-                onChange={(event) => {
-                  setName(event.currentTarget.value);
-                }}
-              />
-              <input
-                value={isEditing ? type : animal.type}
-                disabled={!isEditing}
-                onChange={(event) => {
-                  setType(event.currentTarget.value);
-                }}
-              />
-              <input
-                value={isEditing ? accessory : animal.accessory || ''}
-                disabled={!isEditing}
-                onChange={(event) => {
-                  setAccessory(event.currentTarget.value);
-                }}
-              />
-
-              <button
-                onClick={async () => {
-                  await handleAnimalDelete(animal.id);
-                }}
-              >
-                Delete
-              </button>
-              {!isEditing ? (
-                <button
-                  onClick={() => {
-                    setOnEditId(animal.id);
-                    setName(animal.name);
-                    setAccessory(animal.accessory);
-                    setType(animal.type);
+            return (
+              <div key={animal.id}>
+                <input
+                  value={isEditing ? name : animal.name}
+                  disabled={!isEditing}
+                  onChange={(event) => {
+                    setName(event.currentTarget.value);
                   }}
-                >
-                  edit
-                </button>
-              ) : (
+                />
+                <input
+                  value={isEditing ? type : animal.type}
+                  disabled={!isEditing}
+                  onChange={(event) => {
+                    setType(event.currentTarget.value);
+                  }}
+                />
+                <input
+                  value={isEditing ? accessory : animal.accessory || ''}
+                  disabled={!isEditing}
+                  onChange={(event) => {
+                    setAccessory(event.currentTarget.value);
+                  }}
+                />
+
                 <button
                   onClick={async () => {
-                    setOnEditId(undefined);
-                    await handleAnimalUpdate(animal.id);
+                    await handleAnimalDelete(animal.id);
                   }}
                 >
-                  save
+                  Delete
                 </button>
-              )}
-              <br />
-            </Fragment>
-          );
-        })}
-        <p className={styles.error}>{onError}</p>
-      </div>
+                {!isEditing ? (
+                  <button
+                    onClick={() => {
+                      setOnEditId(animal.id);
+                      setName(animal.name);
+                      setAccessory(animal.accessory);
+                      setType(animal.type);
+                    }}
+                  >
+                    edit
+                  </button>
+                ) : (
+                  <button
+                    onClick={async () => {
+                      setOnEditId(undefined);
+                      await handleAnimalUpdate(animal.id);
+                    }}
+                  >
+                    save
+                  </button>
+                )}
+                <br />
+              </div>
+            );
+          })}
+          <p className={styles.error}>{onError}</p>
+        </div>
+      </Layout>
     </>
   );
 }

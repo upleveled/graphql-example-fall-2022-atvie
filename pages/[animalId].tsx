@@ -15,6 +15,7 @@ export default function Animal(props: Props) {
       <header className={styles.header}>
         <Link href="/">← Back to Animals</Link>
       </header>
+      <h1 className={styles.title}>{props.animal.name}</h1>
       <div className={styles.grid}>
         <div className={styles.gridItem}>
           <Image

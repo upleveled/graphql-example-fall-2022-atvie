@@ -2,6 +2,7 @@ import { gql, useMutation } from '@apollo/client';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
 
 const createAnimal = gql`
@@ -57,28 +58,31 @@ export default function CreateAnimalPage() {
         <title>Create Animal</title>
         <meta name="description" content="Create new animal" />
       </Head>
-      <form className={styles.form} onSubmit={handleSubmit}>
-        <div className={styles.formItems}>
-          <label>
-            Name
-            <input onChange={(event) => setName(event.currentTarget.value)} />
-          </label>
+      <Layout>
+        <h1 className={styles.title}>Create Animal</h1>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <div className={styles.formItems}>
+            <label>
+              Name
+              <input onChange={(event) => setName(event.currentTarget.value)} />
+            </label>
 
-          <label>
-            Type
-            <input onChange={(event) => setType(event.currentTarget.value)} />
-          </label>
+            <label>
+              Type
+              <input onChange={(event) => setType(event.currentTarget.value)} />
+            </label>
 
-          <label>
-            Accessory
-            <input
-              onChange={(event) => setAccessory(event.currentTarget.value)}
-            />
-          </label>
-          <p className={styles.error}>{error}</p>
-          <button>Create Animal</button>
-        </div>
-      </form>
+            <label>
+              Accessory
+              <input
+                onChange={(event) => setAccessory(event.currentTarget.value)}
+              />
+            </label>
+            <p className={styles.error}>{error}</p>
+            <button>Create Animal</button>
+          </div>
+        </form>
+      </Layout>
     </>
   );
 }
