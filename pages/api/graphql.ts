@@ -7,14 +7,15 @@ import {
   createAnimal,
   deleteAnimalById,
   getAnimalById,
+  getAnimalByName,
   getAnimals,
   updateAnimalById,
 } from '../../database/animals';
 
 // TypeScript types
 
-type DeleteAnimalContext = {
-  adminAnimal: {
+type AnimalContext = {
+  fakeAdminAnimal: {
     name: string;
   };
   req: {
@@ -24,7 +25,7 @@ type DeleteAnimalContext = {
   };
 };
 
-type CreateAnimalContext = {
+type AnimalAuthenticationContext = {
   res: {
     setHeader: (name: string, value: string) => void;
   };
@@ -32,6 +33,9 @@ type CreateAnimalContext = {
 
 type Argument = {
   id: string;
+  username?: string;
+  password?: string;
+  name?: string;
 };
 
 type UpdateAnimalInput = AnimalInput & Argument;
@@ -44,6 +48,9 @@ const typeDefs = gql`
 
     # Query a single animal by ID
     animal(id: ID!): Animal
+
+    # Query fake logged in animal
+    fakeLoggedInAnimal(name: String!): Animal
   }
 
   # Mutation type definition
@@ -56,6 +63,9 @@ const typeDefs = gql`
 
     # Delete an existing animal
     deleteAnimal(id: ID!): Animal
+
+    # Login mutation
+    login(username: String!, password: String!): Animal
   }
 
   # Animal type definition
@@ -124,16 +134,21 @@ const resolvers = {
     animal(parent: string, args: Argument) {
       return getAnimalById(parseInt(args.id));
     },
+
+    // resolver for the loggedInAnimal query
+    fakeLoggedInAnimal: async (parent: string, args: Argument) => {
+      if (!args.name || args.name !== 'Ralph') {
+        throw new Error('User not authorized');
+      }
+
+      return await getAnimalByName(args.name);
+    },
   },
 
   // Mutation resolvers
   Mutation: {
     // Create a new animal
-    createAnimal(
-      parent: string,
-      { name, type, accessory }: AnimalInput,
-      context: CreateAnimalContext,
-    ) {
+    createAnimal(parent: string, { name, type, accessory }: AnimalInput) {
       if (
         typeof name !== 'string' ||
         typeof type !== 'string' ||
@@ -144,11 +159,6 @@ const resolvers = {
       ) {
         throw new Error('All fields are required');
       }
-
-      // Create cookies each time a new animal is created
-      const fakeSerializedCookie = createMockSerializedCookie(name);
-      context.res.setHeader('Set-Cookie', fakeSerializedCookie);
-
       return createAnimal(name, type, accessory);
     },
 
@@ -161,11 +171,38 @@ const resolvers = {
     },
 
     // Delete an existing animal
-    deleteAnimal(parent: string, args: Argument, context: DeleteAnimalContext) {
-      if (context.adminAnimal.name !== context.req.cookies.fakeSessionToken) {
+    deleteAnimal(parent: string, args: Argument, context: AnimalContext) {
+      if (
+        context.fakeAdminAnimal.name !== context.req.cookies.fakeSessionToken
+      ) {
         throw new Error('You are not authorized to delete this animal');
       }
       return deleteAnimalById(parseInt(args.id));
+    },
+
+    // Login resolver
+    login: async (
+      parent: string,
+      args: Argument,
+      context: AnimalAuthenticationContext,
+    ) => {
+      if (
+        typeof args.username !== 'string' ||
+        typeof args.password !== 'string' ||
+        !args.username ||
+        !args.password
+      ) {
+        throw new Error('All fields are required');
+      }
+
+      if (args.username !== 'Ralph' || args.password !== 'asdf') {
+        throw new Error('Invalid username or password');
+      }
+
+      const fakeSerializedCookie = createMockSerializedCookie(args.username);
+      context.res.setHeader('Set-Cookie', fakeSerializedCookie);
+
+      return await getAnimalByName(args.username);
     },
   },
 };
@@ -184,8 +221,8 @@ const server = new ApolloServer({
 // Start the server and create a Next.js handler
 export default startServerAndCreateNextHandler(server, {
   context: async (req, res) => {
-    const adminAnimal = await getAnimalById(1);
+    const fakeAdminAnimal = await getAnimalByName('Ralph');
 
-    return { req, res, adminAnimal };
+    return { req, res, fakeAdminAnimal };
   },
 });
