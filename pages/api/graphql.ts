@@ -13,7 +13,6 @@ import {
 } from '../../database/animals';
 
 // TypeScript types
-
 type AnimalContext = {
   fakeAdminAnimal: {
     name: string;
@@ -118,7 +117,7 @@ const typeDefs = gql`
 // ];
 
 // Create fake serializedCookie for authentication
-function createMockSerializedCookie(name: string) {
+function createFakeSerializedCookie(name: string) {
   return `fakeSessionToken=${name}; HttpOnly; SameSite=lax; Path=/; Max-Age=3600`;
 }
 
@@ -137,7 +136,7 @@ const resolvers = {
 
     // resolver for the loggedInAnimal query
     fakeLoggedInAnimal: async (parent: string, args: Argument) => {
-      if (!args.name || args.name !== 'Ralph') {
+      if (!args.name || args.name !== '') {
         throw new Error('User not authorized');
       }
 
@@ -199,7 +198,7 @@ const resolvers = {
         throw new Error('Invalid username or password');
       }
 
-      const fakeSerializedCookie = createMockSerializedCookie(args.username);
+      const fakeSerializedCookie = createFakeSerializedCookie(args.username);
       context.res.setHeader('Set-Cookie', fakeSerializedCookie);
 
       return await getAnimalByName(args.username);
@@ -207,7 +206,7 @@ const resolvers = {
   },
 };
 
-// Create the schema
+// Create executable schema
 export const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
