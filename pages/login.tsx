@@ -34,9 +34,6 @@ export default function Login() {
           password,
         },
       });
-      console.log('Login loginResponse', loggedInAnimal);
-      console.log('Return To: ', router.query.returnTo);
-      console.log('Router Query', router);
 
       if (loggedInAnimal.data) {
         await router.push('/admin-animal');
@@ -84,7 +81,6 @@ export default function Login() {
           <button
             onClick={async () => {
               await loginHandler();
-              console.log('Ye, Logged in now! (not really');
             }}
           >
             Login
@@ -98,7 +94,6 @@ export default function Login() {
 
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const fakeToken = context.req.cookies.fakeSessionToken;
-  console.log('Token: ', fakeToken);
 
   if (fakeToken === 'Ralph') {
     return {
