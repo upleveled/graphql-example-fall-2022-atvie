@@ -1,7 +1,10 @@
 import Head from 'next/head';
 import Header from './Header';
 
-type LayoutProps = { children: React.ReactNode };
+type LayoutProps = {
+  animal?: { name: string } | undefined;
+  children: React.ReactNode;
+};
 
 export default function Layout(props: LayoutProps) {
   return (
@@ -10,7 +13,7 @@ export default function Layout(props: LayoutProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header animal={props.animal} />
 
       <main>{props.children}</main>
     </>
