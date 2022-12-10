@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
-import Layout from '../components/Layout';
 import { Animal } from '../database/animals';
 import queryGraphql from '../shared/query-graphql';
 import styles from '../styles/Home.module.css';
@@ -19,30 +18,28 @@ export default function Home(props: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Layout>
-        <h1 className={styles.title}>Home</h1>
-        <div className={styles.grid}>
-          {props.animals.map((animal) => {
-            return (
-              <Link
-                key={animal.id}
-                className={styles.card}
-                href={`/${animal.id}`}
-              >
-                <Image
-                  src={`/images/${animal.id}-${animal.name.toLowerCase()}.jpeg`}
-                  alt={animal.name}
-                  width={200}
-                  height={200}
-                />
-                <div>
-                  <h2>{animal.name}</h2>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </Layout>
+      <h1 className={styles.title}>Home</h1>
+      <div className={styles.grid}>
+        {props.animals.map((animal) => {
+          return (
+            <Link
+              key={animal.id}
+              className={styles.card}
+              href={`/${animal.id}`}
+            >
+              <Image
+                src={`/images/${animal.id}-${animal.name.toLowerCase()}.jpeg`}
+                alt={animal.name}
+                width={200}
+                height={200}
+              />
+              <div>
+                <h2>{animal.name}</h2>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
     </>
   );
 }
