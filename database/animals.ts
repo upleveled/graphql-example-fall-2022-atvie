@@ -81,3 +81,17 @@ export async function deleteAnimalById(id: number) {
   `
   )[0];
 }
+
+// Get fakeLoggedIn animal by name
+export async function getAnimalByName(name: string) {
+  return (
+    await sql<Animal[]>`
+      SELECT
+        *
+      FROM
+        animals
+      WHERE
+        name = ${name}
+  `
+  )[0];
+}
