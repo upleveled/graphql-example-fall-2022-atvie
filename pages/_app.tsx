@@ -6,6 +6,7 @@ import {
   NormalizedCacheObject,
 } from '@apollo/client';
 import type { AppProps } from 'next/app';
+import Layout from '../components/Layout';
 
 export const cache: InMemoryCache = new InMemoryCache({});
 
@@ -20,7 +21,9 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />
+      <Layout animal={{ name: '' }}>
+        <Component {...pageProps} />
+      </Layout>
     </ApolloProvider>
   );
 }
