@@ -95,7 +95,7 @@ export default function Login() {
 export function getServerSideProps(context: GetServerSidePropsContext) {
   const fakeToken = context.req.cookies.fakeSessionToken;
 
-  if (fakeToken === 'Ralph') {
+  if (fakeToken) {
     return {
       redirect: {
         destination: '/admin-animal',
