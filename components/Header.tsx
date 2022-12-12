@@ -1,9 +1,24 @@
+import { gql, useQuery } from '@apollo/client';
 import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 
-type HeaderProps = { animal?: { name: string } };
+const fakeLoggedInAnimal = gql`
+  query FakeLoggedInAnimal($name: String!) {
+    fakeLoggedInAnimal(name: $name) {
+      accessory
+      name
+      type
+    }
+  }
+`;
 
-export default function Header(props: HeaderProps) {
+export default function Header() {
+  const { data } = useQuery(fakeLoggedInAnimal, {
+    variables: {
+      name: '',
+    },
+  });
+
   return (
     <header>
       <nav className={styles.header}>
@@ -13,7 +28,7 @@ export default function Header(props: HeaderProps) {
           <Link href="/admin-animal">Admin Animal</Link>
         </div>
         <div>
-          {props.animal?.name === 'Ralph' ? (
+          {data?.fakeLoggedInAnimal ? (
             <Link href="/logout">Logout</Link>
           ) : (
             <Link href="/login">Login</Link>
