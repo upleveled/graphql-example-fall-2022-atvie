@@ -136,8 +136,8 @@ const resolvers = {
 
     // resolver for the loggedInAnimal query
     fakeLoggedInAnimal: async (parent: string, args: Argument) => {
-      if (!args.name || args.name !== '') {
-        throw new Error('User not authorized');
+      if (!args.name) {
+        throw new Error('User must be logged in');
       }
 
       return await getAnimalByName(args.name);
@@ -194,7 +194,7 @@ const resolvers = {
         throw new Error('All fields are required');
       }
 
-      if (args.username !== 'Ralph' || args.password !== 'asdf') {
+      if (args.username !== 'Lulu' || args.password !== 'asdf') {
         throw new Error('Invalid username or password');
       }
 
