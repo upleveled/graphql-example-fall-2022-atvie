@@ -21,7 +21,7 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Layout animal={{ name: '' }}>
+      <Layout /* animal={{ name: '' }} */>
         <Component {...pageProps} />
       </Layout>
     </ApolloProvider>
