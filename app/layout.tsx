@@ -9,10 +9,7 @@ import {
 } from '@apollo/client';
 import Header from '../components/Header';
 
-// import type { AppProps } from 'next/app';
-// import Layout from '../components/Layout';
-
-export const cache: InMemoryCache = new InMemoryCache({});
+const cache: InMemoryCache = new InMemoryCache({});
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
