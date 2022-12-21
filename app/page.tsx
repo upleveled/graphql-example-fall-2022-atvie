@@ -4,10 +4,6 @@ import { Animal } from '../database/animals';
 import queryGraphql from '../shared/query-graphql';
 import styles from '../styles/Home.module.css';
 
-type Props = {
-  animals: Animal[];
-};
-
 export default async function Home() {
   const { animals } = await queryGraphql(`
 query {
