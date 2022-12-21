@@ -5,14 +5,14 @@ import queryGraphql from '../shared/query-graphql';
 import styles from '../styles/Home.module.css';
 
 export default async function Home() {
-  const { animals } = await queryGraphql(`
+  const { animals } = (await queryGraphql(`
 query {
     animals {
     id
     name
   }
 }
-`);
+`)) as { animals: Animal[] };
 
   return (
     <>

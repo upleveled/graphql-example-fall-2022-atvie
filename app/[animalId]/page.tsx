@@ -1,16 +1,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { Animal } from '../../database/animals';
 import queryGraphql from '../../shared/query-graphql';
 import styles from '../../styles/Home.module.css';
 
 type Props = {
-  params: any;
+  params: string;
 };
 
-export default async function Animal(props: Props) {
+export default async function AnimalPage(props: Props) {
   const animalId = props.params;
 
-  const { animal } = await queryGraphql(
+  const { animal } = (await queryGraphql(
     `
   query($animalId: ID!) {
     animal(id: $animalId) {
@@ -22,7 +23,7 @@ export default async function Animal(props: Props) {
   }
   `,
     animalId,
-  );
+  )) as { animal: Animal };
 
   return (
     <>
